@@ -29,15 +29,7 @@ export const wagmiConfig = getDefaultConfig({
 const client = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={client}>
-        <RainbowKitProvider>
-          <Component {...pageProps} />
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
-  );
+  return <Component {...pageProps} />;
 }
 
 export default MyApp;
