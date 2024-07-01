@@ -16,7 +16,7 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "sass": "^1.77.6",
-    "test12_npm_package": "^2.0.27",
+    "test12_npm_package": "^2.0.39",
     "viem": "2.9.31",
     "wagmi": "^2.9.2"
   },

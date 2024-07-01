@@ -55,7 +55,7 @@ export default function Card() {
   const transaction = async () => {
     try {
       setIsLoading(true);
-      const tx = {
+      const tx: any = {
         to: toAddress,
         value: ethers.utils.parseEther(amount),
       };
@@ -64,9 +64,11 @@ export default function Card() {
       // );
 
       const provider1: any = getEthersProvider();
+      console.log("providers", provider, provider1);
+
       const add: any = address;
       // // change provider value to test
-      const signer1 = customethers.metaMaskSigner(provider1, "137", add);
+      const signer1 = customethers.metaMaskSigner(provider, "137", add);
       const signer = await getEthersSigner();
       console.log("signer", tx);
 
