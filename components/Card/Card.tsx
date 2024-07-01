@@ -8,8 +8,15 @@ import { parseEther } from "viem";
 import { getEthersProvider, getEthersSigner } from "../../ethers/ethers";
 
 export default function Card() {
-  const [address, setAddress] = useState("");
+  const { address } = useAccount();
+
   const [provider, setProvider] = useState<any>({});
+  const [amount, setAmount] = useState("");
+  const [toAddress, setToAddress] = useState("");
+  const [txHash, setTxHash] = useState("");
+  const [msg, setMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const customethers = new CustomEthers();
   useEffect(() => {
     const provider: any = new ethers.providers.Web3Provider(window?.ethereum);
@@ -17,43 +24,89 @@ export default function Card() {
     // transaction();
 
     setProvider(provider);
-    accountChangedHandler(provider);
+    // accountChangedHandler(provider);
   }, [address]);
 
-  const accountChangedHandler = async (pro: any) => {
-    const newAccount = await pro.getSigner();
-    const address = await newAccount.getAddress();
-    console.log("address", address);
+  function containsOnlyDigits(str: any) {
+    var rgx = /^[0-9]*\.?[0-9]*$/;
+    return str.match(rgx);
+  }
 
-    setAddress(address);
+  const handleInput = (value: any, input: any) => {
+    setTxHash("");
+    setMsg("");
+    if (input === "amount" && containsOnlyDigits(value)) {
+      setAmount(value);
+    } else if (input === "toAddress") {
+      setToAddress(value);
+    }
+  };
+
+  const accountChangedHandler = async (pro: any) => {
+    try {
+      const newAccount = await pro.getSigner();
+      const address = await newAccount.getAddress();
+      console.log("address", address);
+
+      // setAddress(address);
+    } catch (error) {}
   };
 
   const transaction = async () => {
     try {
+      setIsLoading(true);
       const tx = {
-        to: "0x52b5B7f92791DED8641aaFD6e87129F8089B8902",
-        value: ethers.utils.parseEther("0.1"),
+        to: toAddress,
+        value: ethers.utils.parseEther(amount),
       };
-      const provider1: any = new customethers.ethers.BrowserProvider(
-        window?.ethereum
-      );
+      // const provider1: any = new customethers.ethers.BrowserProvider(
+      //   window?.ethereum
+      // );
 
-      // change provider value to test
-      const signer1 = customethers.metaMaskSigner(provider, "137", address);
-      const signer = await provider.getSigner();
+      const provider1: any = getEthersProvider();
+      const add: any = address;
+      // // change provider value to test
+      const signer1 = customethers.metaMaskSigner(provider1, "137", add);
+      const signer = await getEthersSigner();
+      console.log("signer", tx);
 
-      await signer.sendTransaction(tx);
+      const hash = await signer1.sendTransaction(tx);
       // const signer1 = await provider.getSigner(address);
       // const signer = await getEthersSigner();
-      console.log(provider);
-    } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      // console.log("signer", signer);
+      console.log(hash.hash);
+      setAmount("");
+      setToAddress("");
+      setTxHash(hash.hash);
+    } catch (error: any) {
+      console.log(error.reason);
+      setMsg(error?.reason);
+      setIsLoading(false);
     }
   };
 
   return (
     <div>
-      <button onClick={transaction}>Transaction</button>
+      <div className='card'>
+        <input
+          type='text'
+          value={amount}
+          placeholder='Enter Amount'
+          onChange={(e) => handleInput(e.target.value, "amount")}
+        />
+        <input
+          type='text'
+          value={toAddress}
+          placeholder='Enter Address'
+          onChange={(e) => handleInput(e.target.value, "toAddress")}
+        />
+        <button onClick={transaction}>
+          {isLoading ? "Loading..." : "Send"}
+        </button>
+        <p className='red'>{msg && msg}</p>
+      </div>
+      <p className='green'> {txHash && "Transaction Success:" + txHash}</p>
     </div>
   );
 }

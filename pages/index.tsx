@@ -9,9 +9,9 @@ import WalletCard from "../components/Card/metamask";
 const Home: NextPage = () => {
   return (
     <div className={styles.container}>
-      {/* <Navbar /> */}
+      <Navbar />
       {/* <Card /> */}
-      <WalletCard />
+      {/* <WalletCard /> */}
       <Card />
     </div>
   );

@@ -1,0 +1,39 @@
+.card {
+  display: flex;
+  width: 400px;
+  position: relative;
+  margin: auto;
+  margin-top: 200px;
+  border: 1px solid black;
+  border-radius: 10px;
+  flex-direction: column;
+  padding: 30px;
+  gap: 30px;
+}
+
+.card > input {
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid black;
+  font-size: 20px;
+}
+
+.card > button {
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid black;
+  font-size: 20px;
+}
+
+.card > p {
+  position: absolute;
+  bottom: -10px;
+  left: 30px;
+}
+
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}

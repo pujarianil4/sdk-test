@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../components/Card/card.css";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 
@@ -29,7 +30,15 @@ export const wagmiConfig = getDefaultConfig({
 const client = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={client}>
+        <RainbowKitProvider>
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
 }
 
 export default MyApp;

@@ -14,3 +14,9 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.navbar {
+  display: flex;
+  justify-content: end;
+  padding: 10px;
+}
