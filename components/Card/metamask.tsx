@@ -8,24 +8,29 @@ const WalletCard = () => {
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [userBalance, setUserBalance] = useState("");
   const connectwalletHandler = () => {
-    const provider = new ethers.providers.Web3Provider(window?.ethereum);
+    const provider: any = new ethers.BrowserProvider(window?.ethereum);
+
     if (window.ethereum) {
       provider.send("eth_requestAccounts", []).then(async () => {
-        await accountChangedHandler(provider.getSigner());
+        await accountChangedHandler(await provider.getSigner(), provider);
       });
     } else {
       setErrorMessage("Please Install Metamask!!!");
     }
   };
-  const accountChangedHandler = async (newAccount: any) => {
-    const address = await newAccount.getAddress();
+  const accountChangedHandler = async (signer: any, provider: any) => {
+    const p = ethers.getDefaultProvider();
+    console.log("signeer", signer, provider, p);
+
+    const address = await signer.getAddress();
     setDefaultAccount(address);
-    const balance = await newAccount.getBalance();
-    setUserBalance(ethers.utils.formatEther(balance));
-    console.log("balance1", balance);
+
+    const balance = await p.getBalance(address);
+    setUserBalance(ethers.formatEther(balance));
+    console.log("balance1", balance, ethers.formatEther(balance));
   };
   const getuserBalance = async (address: any) => {
-    const provider = new ethers.providers.Web3Provider(window?.ethereum);
+    const provider: any = new ethers.BrowserProvider(window?.ethereum);
     const balance = await provider.getBalance(address, "latest");
     console.log("balance2", balance);
   };

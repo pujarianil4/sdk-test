@@ -11,7 +11,7 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       <Navbar />
       {/* <Card /> */}
-      {/* <WalletCard /> */}
+      <WalletCard />
       <Card />
     </div>
   );
