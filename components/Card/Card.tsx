@@ -59,12 +59,12 @@ export default function Card() {
         to: toAddress,
         value: ethers.utils.parseEther(amount),
       };
-      // const provider1: any = new customethers.ethers.BrowserProvider(
+      // const provider2: any = new customethers.ethers.BrowserProvider(
       //   window?.ethereum
       // );
 
-      const provider1: any = getEthersProvider();
-      console.log("providers", provider, provider1);
+      // const provider1: any = getEthersProvider();
+      // console.log("providers", provider, provider1, tx);
 
       const add: any = address;
       // // change provider value to test

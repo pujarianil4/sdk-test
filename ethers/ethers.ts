@@ -22,7 +22,7 @@ export function clientToProvider(
 }
 
 /** Action to convert a viem Public Client to an ethers.js Provider. */
-export function getEthersProvider({ chainId }: { chainId?: number } = {}) {
+export function getEthersProvider({ chainId }: { chainId?: any } = {}) {
   const client = getClient(wagmiConfig, { chainId });
   return clientToProvider(client || { transport: "", chain: "" });
 }
@@ -40,7 +40,7 @@ export function clientToSigner(client: Client<Transport, Chain, Account>) {
 }
 
 /** Action to convert a Viem Client to an ethers.js Signer. */
-export async function getEthersSigner({ chainId }: { chainId?: number } = {}) {
+export async function getEthersSigner({ chainId }: { chainId?: any } = {}) {
   const client = await getConnectorClient(wagmiConfig, { chainId });
   return clientToSigner(client);
 }
