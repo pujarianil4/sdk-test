@@ -2,7 +2,7 @@ import { sendTransaction } from "@wagmi/core";
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useAccount } from "wagmi";
-import { wagmiConfig } from "../../pages/_app";
+import { BigNumber } from "bignumber.js";
 import { CustomEthers } from "test12_npm_package";
 import { parseEther } from "viem";
 import { getEthersProvider, getEthersSigner } from "../../ethers/ethers";
@@ -17,6 +17,32 @@ export default function Card() {
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  function convertToBigNumber(number: number) {
+    class BigNumber {
+      _hex: string;
+      _isBigNumber: boolean;
+      constructor(hex: any) {
+        this._hex = hex;
+        this._isBigNumber = true;
+      }
+    }
+    // Determine if the number is a float and scale it to an integer
+    const scale = 10 ** 18; // You can adjust the scale as needed
+    const scaledNumber = Math.round(number * scale);
+
+    // Ensure the scaled number is a BigInt
+    const bigIntNumber = BigInt(scaledNumber);
+
+    // Convert the BigInt to a hexadecimal string
+    const hexString = "0x" + bigIntNumber.toString(16);
+
+    // Return the object in the desired format
+    return {
+      _hex: hexString,
+      _isBigNumber: true,
+    };
+    return new BigNumber(hexString);
+  }
   const customethers = new CustomEthers();
   useEffect(() => {
     const provider: any = new ethers.providers.Web3Provider(window?.ethereum);
@@ -57,7 +83,7 @@ export default function Card() {
       setIsLoading(true);
       const tx: any = {
         to: toAddress,
-        value: ethers.utils.parseEther(amount),
+        value: ethers.utils.parseEther("0.1"),
       };
       // const provider2: any = new customethers.ethers.BrowserProvider(
       //   window?.ethereum
