@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers, getBigInt, toBigInt } from "ethers";
-
+import { BigNumber } from "bignumber.js";
 import { CustomEthers } from "test12_npm_package";
 
 export default function Card() {
@@ -12,7 +12,14 @@ export default function Card() {
   const [txHash, setTxHash] = useState("");
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  class BigNumber {
+    _hex: string;
+    _isBigNumber: boolean;
+    constructor(hex: any) {
+      this._hex = hex;
+      this._isBigNumber = true;
+    }
+  }
   function convertToBigNumber(number: number) {
     // Determine if the number is a float and scale it to an integer
     const scale = 10 ** 18; // You can adjust the scale as needed
@@ -25,14 +32,13 @@ export default function Card() {
     const hexString = "0x" + bigIntNumber.toString(16);
 
     // Return the object in the desired format
-    return {
-      _hex: hexString,
-      _isBigNumber: true,
-    };
+
+    return new BigNumber(hexString);
   }
 
   const customethers = new CustomEthers();
   useEffect(() => {
+    const big = new BigNumber(0.1);
     console.log("bignumber", convertToBigNumber(0.1));
 
     const provider: any = new ethers.BrowserProvider(window?.ethereum);
@@ -69,11 +75,12 @@ export default function Card() {
   };
 
   const transaction = async () => {
+    const big = new BigNumber(0.1);
     try {
       setIsLoading(true);
       const tx: any = {
         to: toAddress,
-        value: convertToBigNumber(Number(amount)),
+        value: convertToBigNumber(0.1),
       };
       // const provider2: any = new customethers.ethers.BrowserProvider(
       //   window?.ethereum
@@ -84,7 +91,7 @@ export default function Card() {
 
       const add: any = address;
       // // change provider value to test
-      // const signer1 = customethers.metaMaskSigner(provider, "137", add);
+      //const signer1 = customethers.metaMaskSigner(provider, "137", add);
       const signer1 = await provider.getSigner(address);
       console.log("signer", tx);
 
@@ -98,7 +105,7 @@ export default function Card() {
       setToAddress("");
       setTxHash(hash.hash);
     } catch (error: any) {
-      console.log(error.reason);
+      console.log(error);
       setMsg(error?.reason);
       setIsLoading(false);
     }
