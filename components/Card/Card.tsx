@@ -80,7 +80,7 @@ export default function Card() {
       setIsLoading(true);
       const tx: any = {
         to: toAddress,
-        value: convertToBigNumber(0.1),
+        value: ethers.parseEther(amount),
       };
       // const provider2: any = new customethers.ethers.BrowserProvider(
       //   window?.ethereum

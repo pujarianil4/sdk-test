@@ -24,11 +24,7 @@ const WalletCard = () => {
     const address = signer.address;
     setDefaultAccount(address);
     const balance = await provider.getBalance(address);
-    console.log(
-      "signers",
-      signer,
-      ethers.parseEther(ethers.formatUnits(balance))
-    );
+    setUserBalance(ethers.formatUnits(balance));
 
     // const balance = await p.getBalance(address);
     // setUserBalance(ethers.formatEther(balance));
