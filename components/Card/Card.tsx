@@ -23,22 +23,6 @@ export default function Card() {
     }
   }
 
-  function convertToBigNumber(number: number) {
-    // Determine if the number is a float and scale it to an integer
-    const scale = 10 ** 18; // You can adjust the scale as needed
-    const scaledNumber = Math.round(number * scale);
-
-    // Ensure the scaled number is a BigInt
-    const bigIntNumber = BigInt(scaledNumber);
-
-    // Convert the BigInt to a hexadecimal string
-    const hexString = "0x" + bigIntNumber.toString(16);
-
-    // Return the object in the desired format
-
-    return new BigNumber(hexString);
-  }
-
   const customethers = new CustomEthers();
   useEffect(() => {
     const big = new BigNumber(0.1);
@@ -76,7 +60,6 @@ export default function Card() {
   };
 
   const transaction = async () => {
-    const big = new BigNumber(0.1);
     try {
       setIsLoading(true);
       const tx: any = {
@@ -95,24 +78,24 @@ export default function Card() {
 
       // // // change provider value to test
       // console.log("providers", provider, "137", add);
-      const custom: any = new ethers.JsonRpcProvider(
-        "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9"
-      );
+      // const custom: any = new ethers.JsonRpcProvider(
+      //   "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9"
+      // );
 
       // const c = new ethers.BrowserProvider(custom);
       //const signer1 = await customethers.metaMaskSigner(provider, "137", add);
-      const signer1 = await custom.getSigner(address);
-      console.log(custom, provider, address);
+      const signer1 = await provider.getSigner();
+      // console.log(custom, provider, address);
 
-      // const hash = await signer1.sendTransaction(tx);
-      // //
-      // // const signer = await getEthersSigner();
-      // setIsLoading(false);
-      // // console.log("signer", signer);
+      const hash = await signer1.sendTransaction(tx);
+      //
+      // const signer = await getEthersSigner();
+      setIsLoading(false);
+      // console.log("signer", signer);
 
-      // setAmount("");
-      // setToAddress("");
-      // setTxHash(hash.hash);
+      setAmount("");
+      setToAddress("");
+      setTxHash(hash.hash);
     } catch (error: any) {
       console.log(error);
       setMsg(error?.reason);
